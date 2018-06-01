@@ -1,0 +1,208 @@
+<dom-module id="jso-variant-effect-grid">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            width: 100%;
+        }
+    </style>
+    <template>
+        <!--<sortable-table class="bootstrap"-->
+        <!--id="effectGrid"-->
+        <!--footerTemplate="defaultPager"-->
+        <!--pageSize="10"-->
+        <!--page="{{page}}"-->
+        <!--columns="{{ columns }}"-->
+        <!--loading="true"-->
+        <!--data="{{data}}">-->
+
+        <!--<template id="proteinSubstitutionScoresTemplate">-->
+        <!--<td>-->
+        <!--{{value.score}} - {{value.description}}-->
+        <!--</td>-->
+        <!--</template>-->
+        <!--<template id="seqOntologyTemplate">-->
+        <!--<td>-->
+        <!--<a href="http://www.sequenceontology.org/browser/current_svn/term/{{value.soAccession}}"-->
+        <!--target="_blank">{{value.soName}}</a>-->
+        <!--</td>-->
+        <!--</template>-->
+        <!--<template id="ensemblGeneIdTemplate">-->
+        <!--<td>-->
+        <!--<a href="http://www.ensembl.org/Homo_sapiens/Location/View?g={{value}}"-->
+        <!--target="_blank">{{value}}</a>-->
+        <!--</td>-->
+        <!--</template>-->
+        <!--<template id="ensemblTranscriptIdTemplate">-->
+        <!--<td>-->
+        <!--<a href="http://www.ensembl.org/Homo_sapiens/Location/View?t={{value}}"-->
+        <!--target="_blank">{{value}}</a>-->
+        <!--</td>-->
+        <!--</template>-->
+        <!--</sortable-table>-->
+
+        <jso-table id="table" hidden$="{{isEmpty}}"
+                   on-rowclick="handleRowClick"></jso-table>
+        <div hidden$="{{!isEmpty}}" style="padding:20px 50px;">
+            No effect found.
+        </div>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'jso-variant-effect-grid',
+        properties: {
+            row: {
+                type: Object,
+                observer: 'rowChanged'
+            },
+            isEmpty: {
+                value: false,
+                type: Boolean
+            }
+        },
+        ready: function () {
+            this.$.table.columns = this._columns;
+        },
+        _columns: [
+            {
+                name: "geneName",
+                title: "Gene Name"
+            },
+            {
+                name: "ensemblGeneId",
+                title: "Ensembl Gene Id",
+                cellTemplate: "ensemblGeneIdTemplate"
+            },
+            {
+                name: "ensemblTranscriptId",
+                title: "Ensembl Transcript Id",
+                cellTemplate: 'ensemblTranscriptIdTemplate'
+            },
+            {
+                name: "so",
+                title: "Conseq. type",
+                formula: function (row) {
+                    var aux = {};
+                    if (row.soName && row.soAccession) {
+
+                        aux.soName = row.soName;
+                        aux.soAccession = row.soAccession;
+                    }
+                    return aux.soName;
+                }
+            },
+            {
+                name: "relativePosition",
+                title: "Relative Position"
+            },
+            {
+                name: "codon",
+                title: "Codon"
+            },
+            {
+                name: "strand",
+                title: "Strand"
+            },
+            {
+                name: "biotype",
+                title: "Biotype"
+            },
+            {
+                name: "cDnaPosition",
+                title: "cDna Position"
+            },
+            {
+                name: "cdsPosition",
+                title: "cds Position"
+            },
+            {
+                name: "aaPosition",
+                title: "AA Position"
+            },
+            {
+                name: "aaChange",
+                title: "AA Change"
+            },
+            {
+                name: "sift",
+                title: "Sift",
+                cellTemplate: 'proteinSubstitutionScoresTemplate',
+                formula: function (row) {
+                    var pss = row.proteinSubstitutionScores;
+
+                    if (pss != null && pss.length > 0) {
+                        for (var i = 0; i < pss.length; i++) {
+                            var elem = pss[i];
+                            if (elem.source == "Sift") {
+                                return elem.score;
+                            }
+                        }
+                    }
+                    return "";
+                }
+            },
+            {
+                name: "polyphen", title: "Polyphen", cellTemplate: 'proteinSubstitutionScoresTemplate',
+                formula: function (row) {
+                    var pss = row.proteinSubstitutionScores;
+
+                    if (pss != null && pss.length > 0) {
+                        for (var i = 0; i < pss.length; i++) {
+                            var elem = pss[i];
+                            if (elem.source == "Polyphen") {
+                                return elem.score;
+                            }
+                        }
+                    }
+                    return "";
+                }
+            }
+        ],
+
+        rowChanged: function (neo, old) {
+            var me = this;
+            this.$.table.currentPage = 1;
+            if (neo) {
+                var variant = neo.chromosome+ ":" + neo.start + ":" + neo.reference + ":" + neo.alternate;
+                CellBaseManager.get({
+//                    host: 'http://wwwdev.ebi.ac.uk/cellbase/webservices/rest',
+                    version: 'v3',
+                    species: 'hsapiens',
+                    category: 'genomic',
+                    subCategory: 'variant',
+                    resource: 'full_annotation',
+                    query: variant,
+                    async: false,
+                    success: function (response) {
+                        try {
+                            me.$.table.data = me.parseFunction(response.response[0].result[0].consequenceTypes);
+                            me.isEmpty = (me.$.table.data.length > 0) ? false : true;
+                        } catch (e) {
+                            me.$.table.data = [];
+                            me.isEmpty = true;
+                        }
+                    }
+                });
+            }
+        },
+        parseFunction: function (data) {
+            var res = [];
+
+            for (var i = 0; i < data.length; i++) {
+                var elem = data[i];
+
+                for (var j = 0; j < elem.soTerms.length; j++) {
+                    var soTerm = elem.soTerms[j];
+                    var aux = Utils.clone(elem);
+                    aux.soName = soTerm.soName;
+                    aux.soAccession = soTerm.soAccession;
+
+                    res.push(aux);
+                }
+            }
+            return res;
+        }
+    });
+</script>

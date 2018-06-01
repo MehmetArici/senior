@@ -1,0 +1,120 @@
+/** HEADER **/
+.all .navbar{
+    margin-bottom: 0 !important;
+    background: linear-gradient(to left, rgba(5,5,22,2), rgba(58,5,100,1));
+}
+.all .navbar .container-fluid{
+    margin-top: 50px;
+}
+.all .navbar .container-fluid .navbar-collapse{
+    float: right;
+    padding-right: 70px;
+}
+.all .navbar .container-fluid .navbar-header .navbar-brand{
+  padding-left: 60px;
+}
+.all .navbar .container-fluid .navbar-header .navbar-brand img{
+ width: 96px;
+ height: auto;
+ margin-top: -45px;
+}
+
+.all .navbar .navbar-collapse .navbar-nav li a{
+    color: #CFD8DC;
+    font-weight: 500;
+    text-decoration: none;
+}
+.all .navbar .navbar-collapse .navbar-nav li:hover a{
+    border: 1px solid #6A1B9A;
+    border-radius: 10px;
+    text-decoration: none;
+}
+.all .navbar .navbar-collapse .navbar-nav .active-button a {
+    border: 1px solid #6A1B9A;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #6A1B9A;
+    background-color: #ECEFF1;
+}
+/**HOME - BODY*/
+.content .container .row {
+  margin: 20px;
+}
+
+.content .container .row h1 {
+  color: #3A0564;
+}
+.content .container .row p{
+	padding-top: 10px;
+  font-size: 20px;
+}
+.content .container .row img{
+	padding: 5%;
+	width: 100%;
+}
+/*Precomputed - Table*/
+.button-in-table{
+    width: 40px !important;
+}
+.graph-th{
+    width: 50% !important;
+}
+#example tbody tr td .genome-in-table {
+    position: relative;
+    display: block;
+    width: 99%;
+    height: 15px;
+    background-color: #8BC34A;
+    opacity: 0.6;
+}
+.genome-cell{
+    padding-top: 5px !important;
+}
+.iconned-td {
+    font-size: 12px !important;
+}
+.highcharts-credits{
+    display: none;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  .dialog {
+    z-index: 1000;
+    position: fixed;
+    right: 0;
+    left: 0;
+    top: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    min-height: 200px;
+    width: 90%;
+    max-width: 520px;
+    background-color: #fff;
+    padding: 12px;
+    box-shadow: 0 7px 8px -4px rgba(0, 0, 0, 0.2), 0 13px 19px 2px rgba(0, 0, 0, 0.14), 0 5px 24px 4px rgba(0, 0, 0, 0.12);
+  }
+  
+  @media (min-width: 768px) {
+    .dialog {
+      top: 40px;
+    }
+  }
+  
+  .dialog__close-btn {
+    border: 0;
+    background: none;
+    color: #2d2d2d;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    font-size: 1.2em;
+  }

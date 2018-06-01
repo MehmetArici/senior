@@ -18,6 +18,9 @@ Route::get('/analysis', 'AnalysisController@index')->name('analysis');
 
 Route::get('/load_analysis', 'AnalysisController@load_example')->name('load_exapmle');
 
+Route::get('/load_genome/{lncrna}', 'ResultController@load_genome')->name('load_genome');
+
+
 /* POSTS */
 Route::post('/post_analyze', 'AnalysisController@post_analyze')->name('post_analyze');
 

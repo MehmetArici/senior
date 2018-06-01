@@ -32,6 +32,11 @@ class ResultController extends Controller
         */
     }
 
+    public function load_genome($lncrna){
+
+        return view("genome-maps");
+    }
+
     public function see_analysis(){
 
         $this->validate(request(), [

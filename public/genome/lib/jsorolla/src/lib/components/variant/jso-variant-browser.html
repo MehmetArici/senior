@@ -1,0 +1,169 @@
+<link rel="import" href="jso-variant-filter-form.html">
+<link rel="import" href="jso-variant-grid.html">
+
+<link rel="import" href="jso-variant-effect-grid.html">
+<link rel="import" href="jso-variant-frequencies-grid.html">
+<link rel="import" href="jso-variant-phenotype-grid.html">
+<link rel="import" href="jso-variant-stats.html">
+<link rel="import" href="../jso-genome-viewer-element.html">
+
+<dom-module id="jso-variant-browser">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            height: 100%;
+            background-color: #fff;
+            overflow-y: scroll;
+        }
+
+        .title {
+            font-size: 22px;
+            padding: 5px 20px;
+        }
+
+        #right {
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+
+        #menu {
+            /*border-bottom: 1px solid rgba(125, 125, 125, 0.4);*/
+            margin-top: 15px;
+        }
+
+        #menu > div {
+            font-size: 17px;
+            padding: 5px 5px;
+            margin: 0 20px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.1s;
+            cursor: pointer;
+        }
+
+        #menu > div:hover {
+            border-bottom-color: rgba(125, 125, 125, 0.4);
+        }
+
+        #menu > div[selected] {
+            border-bottom-color: rgba(125, 125, 125, 0.7);
+        }
+
+        #tools {
+            /*height: calc(100% - 375px);*/
+            /*overflow-x: hidden;*/
+        }
+
+        jso-variant-grid,
+        jso-genome-viewer-element,
+        jso-variant-effect-grid {
+            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+    <template>
+        <div class="title color-2">
+            <span>{{file.attributes.variantSource.studyName}}</span>
+            <i class="fa fa-angle-right"></i>
+            <span>{{file.name}}</span>
+        </div>
+        <div class="horizontal layout">
+            <jso-variant-filter-form url="{{url}}" file="{{file}}"></jso-variant-filter-form>
+            <div id="right" class="flex">
+                <jso-variant-grid url="{{url}}" file="{{file}}"
+                                  on-rowclick="handleRowClick"></jso-variant-grid>
+
+                <div id="menu" class="color-2 color-hover-2 horizontal layout">
+                    <div on-click="handleMenuClick" data-option="gv">Genomic context</div>
+                    <div on-click="handleMenuClick" data-option="frequency">Frequencies</div>
+                    <div on-click="handleMenuClick" data-option="phenotype">Phenotype</div>
+                    <div on-click="handleMenuClick" data-option="effect">Effect</div>
+                    <div on-click="handleMenuClick" data-option="stats">Stats</div>
+                </div>
+
+                <br>
+
+                <div id="tools">
+                    <jso-genome-viewer-element id="gv"></jso-genome-viewer-element>
+                    <jso-variant-frequencies-grid id="frequency" hidden></jso-variant-frequencies-grid>
+                    <jso-variant-phenotype-grid id="phenotype" hidden></jso-variant-phenotype-grid>
+                    <jso-variant-effect-grid id="effect" hidden></jso-variant-effect-grid>
+                    <jso-variant-stats id="stats" hidden></jso-variant-stats>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 'jso-variant-browser',
+            properties: {
+                url: {
+                    type: String,
+                    notify: true,
+                    value: ''
+                },
+                file: {
+                    type: Object
+                },
+                selectedMenuTool: {
+                    type: Object,
+                    observer: 'selectedMenuChanged'
+                }
+            },
+            created: function () {
+                var observer = new MutationObserver(function (mutations) {
+                    if (this.hasAttribute('hidden')) {
+                        this.$.gv.setAttribute('hidden', '');
+                    } else {
+                        this.$.gv.removeAttribute('hidden');
+                    }
+                }.bind(this));
+                observer.observe(this, {attributes: true, attributeFilter: ['hidden']});
+            },
+            ready: function () {
+                this.selectedMenuTool = this.$.menu.querySelector('div');
+            },
+            selectedMenuChanged: function (neo, old) {
+                if (old) {
+                    old.removeAttribute('selected');
+                    this.$[old.dataset.option].setAttribute('hidden', '');
+                }
+                if (neo) {
+                    neo.setAttribute('selected', '');
+                    this.$[neo.dataset.option].removeAttribute('hidden');
+                }
+            },
+            handleMenuClick: function (e) {
+                this.selectedMenuTool = e.currentTarget;
+            },
+            handleRowClick: function (e) {
+                this.$.gv.genomeViewer.setRegion(e.detail.row);
+                this.$.effect.row = e.detail.row;
+                this.$.frequency.row = e.detail.row;
+                this.$.phenotype.row = e.detail.row;
+                this.$.stats.row = e.detail.row;
+            },
+            _old_ready: function () {
+                var me = this;
+
+            },
+            selectedTabChanged: function (oldValue, newValue) {
+                console.log(newValue);
+            },
+            handleDataGridSelected: function (oldValue, newValue) {
+
+                var me = this;
+                var reg = newValue.chromosome + ":" + newValue.start + "-" + newValue.end;
+                var region = new Region(reg);
+
+                // update Effect
+                var variant = newValue.chromosome + ":" + newValue.start + ":" + newValue.reference + ":" + newValue.alternate;
+                this.variantEffect = variant;
+                this.$.jsoVariantStats.stats = newValue.sourceEntries[me.studyId + "_" + me.fileId].stats;
+
+                this.$.gvEl.genomeViewer.setRegion(region);
+            }
+        })
+    </script>
+</dom-module>

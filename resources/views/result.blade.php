@@ -18,6 +18,21 @@
             var id = $(this).data('id');
             $(".modal-body #lncrna_id").val( id );
         });
+        // displaying the Genome viewer
+        function showup()  {
+            var tbl = document.getElementById("example");
+            if (tbl != null) {
+                for (var i = 0; i < tbl.rows.length; i++) {
+                    tbl.rows[i].cells[6].onclick = function(){
+                        document.getElementById('htmlpopup').src='load_genome/' + getval(this.parentElement.cells[0]) ;
+                    }
+                }
+            }
+        }
+
+        function getval(cel) {
+            return cel.innerHTML;
+        }
     </script>
     <script>
         $.ajaxSetup({
@@ -165,6 +180,52 @@
 @endsection
 
 @section('content')
+    <!--//genome viewer displayer-->
+    <style>
+        .modal.modal-wide .modal-dialog {
+
+            width: 90%;
+        }
+        .modal-wide .modal-body {
+            height: 750px;
+
+            /* overflow-y: auto; */
+        }
+
+        /* irrelevant styling */
+        body { text-align: center; }
+        body p {
+            max-width: 400px;
+
+            margin: 20px auto;
+        }
+        #tallModal .modal-body p { margin-bottom: 900px }
+
+    </style>
+    <div class="modal  modal-wide fade" id="externalpage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <!-- <div id="shortModal" class="modal modal-wide fade"> -->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                </div>
+                <div class="modal-body">
+                    <iframe width="100%" height="100%" id="htmlpopup" src="" seamless>
+                    </iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="document.getElementById('htmlpopup').src=''" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--/////////////////////////////////////////////////////////////////////////////////////-->
+    <!--//END of genome viewer-->
+    <!--/////////////////////////////////////////////////////////////////////////////////////-->
+
     <div class="preloader-wrapper1 hidden" id="loading">
         <div class="preloader1">
             <img src="https://media.giphy.com/media/jOYlYHqQmkcaA/giphy.gif" alt="NILA">
@@ -222,7 +283,7 @@
                             <span class="hidden motifList">{{ $rbp->motif_list }}</span>
                         </td>
                         <td class="iconned-td">
-                            <a data-toggle="modal" style="margin-right: 7px;" data-target="#genomeviewer"><i class="fa fa-eye"></i></a>
+                            <a  data-toggle="modal" style="margin-right: 7px;" onclick = "showup()"  data-target="#externalpage"><i class="fa fa-eye"></i></a>
                             <a class="select-analysis" data-toggle="modal" style="color: #880E4F;" data-id="{{$rbp->lncRNA_id}}" data-target="#selectanalysis"><i class="far fa-chart-bar"></i></a>
                         </td>
                         <td class="genome-cell">
@@ -365,4 +426,6 @@
             </div>
         </div>
     </div>
+
+
 @endsection

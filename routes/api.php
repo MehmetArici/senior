@@ -17,4 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('genome', 'GenomeViewerController@index');
+Route::get('genome/{lncrna}/{rbp_name}', 'GenomeViewerController@index');
