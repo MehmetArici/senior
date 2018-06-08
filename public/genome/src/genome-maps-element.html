@@ -737,8 +737,7 @@
                     };
                     parts = document.URL.split('/');
                     parts = parts.slice(4, 5);
-                    console.log("kldnasssssssssssssssss")
-                    console.log(parts.join('/'));
+
                     var renderer = new FeatureRenderer(KMER);
                     track = new FeatureTrack({
                         title: 'K-mers',
@@ -755,7 +754,8 @@
                             templateVariables: {
                                 jobID: 'hsapiens',
                                 kmer_size: '6',
-                                lncrna_id:parts.join('/'),
+                                //lncrna_id:parts.join('/'),
+                                lncrna_id: "ENST00000626826",
                                 rbp_name:'PUM2'
                             },
                             species: this.genomeViewer.species,

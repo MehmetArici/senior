@@ -7,6 +7,7 @@ use App\Models\Pum2_kmer;
 use App\Models\Table4;
 use App\Models\Target_gene;
 use Mail;
+use function PHPSTORM_META\type;
 
 class ResultController extends Controller
 {
@@ -32,9 +33,14 @@ class ResultController extends Controller
         */
     }
 
-    public function load_genome($lncrna){
-
-        return view("genome-maps");
+    public function load_genome($lncrna, $region){
+/*
+        $exploded_lncrna = explode("=", $lncrna);
+        $var = "$exploded_lncrna[1]";
+  */
+        echo $region;
+        echo $lncrna;
+        return view("genome-maps")->with('gene', $lncrna)->with("region", $region);
     }
 
     public function see_analysis(){

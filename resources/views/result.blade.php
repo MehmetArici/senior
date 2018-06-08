@@ -18,13 +18,14 @@
             var id = $(this).data('id');
             $(".modal-body #lncrna_id").val( id );
         });
+
         // displaying the Genome viewer
         function showup()  {
             var tbl = document.getElementById("example");
             if (tbl != null) {
                 for (var i = 0; i < tbl.rows.length; i++) {
                     tbl.rows[i].cells[6].onclick = function(){
-                        document.getElementById('htmlpopup').src='load_genome/' + getval(this.parentElement.cells[0]) ;
+                        document.getElementById('htmlpopup').src='load_genome/' + "?gene=" + getval(this.parentElement.cells[0]) + "&region=12:4395-96150";
                     }
                 }
             }
@@ -202,6 +203,7 @@
         #tallModal .modal-body p { margin-bottom: 900px }
 
     </style>
+
     <div class="modal  modal-wide fade" id="externalpage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <!-- <div id="shortModal" class="modal modal-wide fade"> -->
         <div class="modal-dialog">
@@ -264,6 +266,7 @@
                         $i++;
                     @endphp
                     <tr>
+                        <td class="hidden">{{ $rbp->lncRNA_id }} </td>
                         <td class="transcript_id">{{ $rbp->lncRNA_id }} </td>
                         <td class="kmers">{{ $result->gene_name }}</td>
                         <td>{{ $rbp->num_motifs }}</td>
@@ -283,7 +286,7 @@
                             <span class="hidden motifList">{{ $rbp->motif_list }}</span>
                         </td>
                         <td class="iconned-td">
-                            <a  data-toggle="modal" style="margin-right: 7px;" onclick = "showup()"  data-target="#externalpage"><i class="fa fa-eye"></i></a>
+                            <a  data-toggle="modal" style="margin-right: 7px;" onclick = "showup()" data-target="#externalpage"><i class="fa fa-eye"></i></a>
                             <a class="select-analysis" data-toggle="modal" style="color: #880E4F;" data-id="{{$rbp->lncRNA_id}}" data-target="#selectanalysis"><i class="far fa-chart-bar"></i></a>
                         </td>
                         <td class="genome-cell">

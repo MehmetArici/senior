@@ -77,7 +77,7 @@
         
 
 <script>
-    
+
     function getParams(){
         var idx = document.URL.indexOf('?');
         var params = new Array();
@@ -91,9 +91,12 @@
         
         return params;
     }
-        params = getParams();
-        region = unescape(params["region"]);
-        document.write("REGION = " + region + "<br>");
+
+    params = getParams();
+    //region = unescape(params["lncrna"]);
+    var gene = "{{ $gene }}";
+    var region = "{{ $region }}";
+    document.write("REGION = " + "12:4395-96150" + "<br>");
 
 
     window.addEventListener('WebComponentsReady', function(e) {
