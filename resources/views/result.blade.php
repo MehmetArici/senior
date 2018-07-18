@@ -22,10 +22,11 @@
         // displaying the Genome viewer
         function showup()  {
             var tbl = document.getElementById("example");
+
             if (tbl != null) {
                 for (var i = 0; i < tbl.rows.length; i++) {
-                    tbl.rows[i].cells[6].onclick = function(){
-                        document.getElementById('htmlpopup').src='load_genome/' + "?gene=" + getval(this.parentElement.cells[0]) + "&region=12:4395-96150";
+                    tbl.rows[i].cells[15].onclick = function(){
+                        document.getElementById('htmlpopup').src='load_genome/' + getval(this.parentElement.cells[0]) + "/" + getval(this.parentElement.cells[1]);
                     }
                 }
             }
@@ -266,8 +267,8 @@
                         $i++;
                     @endphp
                     <tr>
-                        <td class="hidden">{{ $rbp->lncRNA_id }} </td>
                         <td class="transcript_id">{{ $rbp->lncRNA_id }} </td>
+                        <td class="hidden">1:21202-23745</td>
                         <td class="kmers">{{ $result->gene_name }}</td>
                         <td>{{ $rbp->num_motifs }}</td>
                         <td>{{ $rbp->num_motifs_in_CLIP_peaks }}</td>

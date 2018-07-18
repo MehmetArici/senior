@@ -38,8 +38,6 @@ class ResultController extends Controller
         $exploded_lncrna = explode("=", $lncrna);
         $var = "$exploded_lncrna[1]";
   */
-        echo $region;
-        echo $lncrna;
         return view("genome-maps")->with('gene', $lncrna)->with("region", $region);
     }
 

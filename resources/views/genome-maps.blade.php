@@ -96,7 +96,8 @@
     //region = unescape(params["lncrna"]);
     var gene = "{{ $gene }}";
     var region = "{{ $region }}";
-    document.write("REGION = " + "12:4395-96150" + "<br>");
+    console.log(gene + " dsadsa " + region)
+    document.write("REGION = " + region + "<br>");
 
 
     window.addEventListener('WebComponentsReady', function(e) {
