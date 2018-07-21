@@ -26,7 +26,8 @@
             if (tbl != null) {
                 for (var i = 0; i < tbl.rows.length; i++) {
                     tbl.rows[i].cells[15].onclick = function(){
-                        document.getElementById('htmlpopup').src='load_genome/' + getval(this.parentElement.cells[0]) + "/" + getval(this.parentElement.cells[1]);
+                        // document.getElementById('htmlpopup').src='load_genome/'  + getval(this.parentElement.cells[0]) + "?region=1:21202-23745";
+                        document.getElementById('htmlpopup').src='load_genome?gene=' + getval(this.parentElement.cells[0]) + '&region=' + getval(this.parentElement.cells[1]);
                     }
                 }
             }
@@ -265,10 +266,14 @@
                     @php
                         $result = App\Models\Table4::where("transcript_id", $rbp->lncRNA_id)->first();
                         $i++;
+                        $exons = explode(',', $result->list_exons);
+                        $sposBeforeSplit = explode(':', $exons[0]);
+                        $eposBeforeSplit = explode(':', $exons[count($exons) - 1]);
+                    $chrNum = preg_replace("/[^0-9]/", "", $result->transcript_chr );
                     @endphp
                     <tr>
                         <td class="transcript_id">{{ $rbp->lncRNA_id }} </td>
-                        <td class="hidden">1:21202-23745</td>
+                        <td class="hidden">{{ $chrNum.":".$sposBeforeSplit[0]."-".$eposBeforeSplit[1]}}</td>
                         <td class="kmers">{{ $result->gene_name }}</td>
                         <td>{{ $rbp->num_motifs }}</td>
                         <td>{{ $rbp->num_motifs_in_CLIP_peaks }}</td>

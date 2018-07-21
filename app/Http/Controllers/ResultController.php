@@ -33,12 +33,13 @@ class ResultController extends Controller
         */
     }
 
-    public function load_genome($lncrna, $region){
+    public function load_genome(){
 /*
         $exploded_lncrna = explode("=", $lncrna);
         $var = "$exploded_lncrna[1]";
   */
-        return view("genome-maps")->with('gene', $lncrna)->with("region", $region);
+//        return url()->full();
+        return view("genome-maps");
     }
 
     public function see_analysis(){

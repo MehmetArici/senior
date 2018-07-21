@@ -400,7 +400,6 @@
             }
             this.species = this.speciesObj;
 
-
             var firstGeneRegion;
             CellBaseManager.get({
                 host: CELLBASE_HOST,
@@ -755,7 +754,7 @@
                                 jobID: 'hsapiens',
                                 kmer_size: '6',
                                 //lncrna_id:parts.join('/'),
-                                lncrna_id: "ENST00000626826",
+                                lncrna_id: $.url().param('gene'),
                                 rbp_name:'PUM2'
                             },
                             species: this.genomeViewer.species,

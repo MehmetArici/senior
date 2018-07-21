@@ -93,11 +93,9 @@
     }
 
     params = getParams();
-    //region = unescape(params["lncrna"]);
-    var gene = "{{ $gene }}";
-    var region = "{{ $region }}";
-    console.log(gene + " dsadsa " + region)
-    document.write("REGION = " + region + "<br>");
+    // region = unescape(params["region"]);
+    // gene = unescape(params["gene"]);
+     // document.write("REGION = " + region + "<br>" + "GENE = " + gene );
 
 
     window.addEventListener('WebComponentsReady', function(e) {
@@ -106,6 +104,7 @@
             DEFAULT_SPECIES = AVAILABLE_SPECIES.vertebrates[0];
             var genomeMaps = document.createElement('genome-maps-element');
             genomeMaps.setAttribute('version', '3.2.0');
+            genomeMaps.setAttribute('gene', 'ENST00000626826');
             document.body.appendChild(genomeMaps);
         });
     });
